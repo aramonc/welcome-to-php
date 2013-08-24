@@ -22,7 +22,10 @@ class { 'puphpet::dotfiles': }
 package { [
     'build-essential',
     'vim',
-    'curl'
+    'curl',
+    'augeas-tools',
+    'augeas-lenses',
+    'libaugeas-ruby1.9.1',
   ]:
   ensure  => 'installed',
 }
@@ -266,11 +269,12 @@ nginx::resource::location { "phpmyadmin-php":
   require             => Nginx::Resource::Vhost['phpmyadmin'],
 }
 
-augeas { 'php-fpm-user':
-  context => '/files/etc/php5/fpm/pool.d/www.conf',
+augeas { "php-fpm-user":
+  incl => '/etc/php5/fpm/pool.d/www.conf',
   changes => [
     "set www/user vagrant",
     "set www/group vagrant",
   ],
+  lens => '@PHP',
   require => Package['php5-fpm'],
 }
