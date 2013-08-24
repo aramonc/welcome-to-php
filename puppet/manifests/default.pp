@@ -164,38 +164,58 @@ class { 'composer':
 
 puphpet::ini { 'xdebug':
   value   => [
+    '; priority=99',
     'xdebug.remote_autostart = 0',
     'xdebug.remote_connect_back = 1',
     'xdebug.remote_enable = 1',
     'xdebug.remote_handler = "dbgp"',
     'xdebug.remote_port = 9000'
   ],
-  ini     => '/etc/php5/conf.d/zzz_xdebug.ini',
+  ini     => '/etc/php5/mods-available/xdebug-custom.ini',
   notify  => Service['php5-fpm'],
   require => Class['php'],
+}
+
+exec {"php5enmod xdebug-custom":
+  require => Puphpet::Ini['xdebug'],
+  creates => '/etc/php5/fpm/conf.d/99-xdebug-custom.ini',
+  notify => Service['php5-fpm'],
 }
 
 puphpet::ini { 'php':
   value   => [
+    '; priority=99',
     'date.timezone = "Europe/Berlin"'
   ],
-  ini     => '/etc/php5/conf.d/zzz_php.ini',
+  ini     => '/etc/php5/mods-available/php-custom.ini',
   notify  => Service['php5-fpm'],
   require => Class['php'],
 }
 
+exec {"php5enmod php-custom":
+  require => Puphpet::Ini['php'],
+  creates => '/etc/php5/fpm/conf.d/99-php-custom.ini',
+  notify => Service['php5-fpm'],
+}
+
 puphpet::ini { 'custom':
   value   => [
+    '; priority=99',
     'display_errors = On',
     'allow_url_fopen = 1',
     'allow_url_include = 0',
     'error_reporting = "E_ALL"'
   ],
-  ini     => '/etc/php5/conf.d/zzz_custom.ini',
+  ini     => '/etc/php5/mods-available/custom.ini',
   notify  => Service['php5-fpm'],
   require => Class['php'],
 }
 
+exec {"php5enmod custom":
+  require => Puphpet::Ini['custom'],
+  creates => '/etc/php5/fpm/conf.d/99-custom.ini',
+  notify => Service['php5-fpm'],
+}
 
 class { 'mysql::server':
   config_hash   => { 'root_password' => 'vagrant' }
@@ -246,3 +266,11 @@ nginx::resource::location { "phpmyadmin-php":
   require             => Nginx::Resource::Vhost['phpmyadmin'],
 }
 
+augeas { 'php-fpm-user':
+  context => '/files/etc/php5/fpm/pool.d/www.conf',
+  changes => [
+    "set www/user vagrant",
+    "set www/group vagrant",
+  ],
+  require => Package['php5-fpm'],
+}
