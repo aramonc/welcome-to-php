@@ -142,7 +142,7 @@ composer::run { 'xhprof-composer-run':
 
 nginx::resource::vhost { 'xhprof':
   ensure      => present,
-  server_name => ['xhprof'],
+  server_name => ['xhprof.welcome-to-php.dev'],
   listen_port => 80,
   index_files => ['index.php'],
   www_root    => "${xhprofPath}/xhprof_html",
@@ -238,7 +238,7 @@ class { 'phpmyadmin':
 
 nginx::resource::vhost { 'phpmyadmin':
   ensure      => present,
-  server_name => ['phpmyadmin'],
+  server_name => ['phpmyadmin.welcome-to-php.dev'],
   listen_port => 80,
   index_files => ['index.php'],
   www_root    => '/usr/share/phpmyadmin',

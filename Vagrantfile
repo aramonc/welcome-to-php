@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
     v.gui = true
   end
 
+  config.vm.hostname = "welcome-to-php.dev"
   
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root" 
   config.vm.provision :shell, :inline =>
