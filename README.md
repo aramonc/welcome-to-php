@@ -19,6 +19,10 @@ Installation
 ------------
 1.  Install the latest versions of VirtualBox, the VirtualBox Extension Pack
     and Vagrant for your operating system
-2.  Clone our repository
-3.  Run this command in the directory you cloned:
+2.  Add the following lines to your /etc/hosts or
+    C:\Windows\System32\drivers\etc\hosts file:
+        192.168.33.10 welcome-to-php.dev www.welcome-to-php.dev
+        192.168.33.10 xhprof.welcome-to-php.dev phpmyadmin.welcome-to-php.dev
+3.  Clone our repository
+4.  Run this command in the directory you cloned:
         vagrant up
