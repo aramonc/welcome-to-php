@@ -269,12 +269,22 @@ nginx::resource::location { "phpmyadmin-php":
   require             => Nginx::Resource::Vhost['phpmyadmin'],
 }
 
-augeas { "php-fpm-user":
-  incl => '/etc/php5/fpm/pool.d/www.conf',
-  changes => [
-    "set www/user vagrant",
-    "set www/group vagrant",
-  ],
-  lens => '@PHP',
+$fpm_cfg = '/etc/php5/fpm/pool.d/www.conf'
+
+# # Commented out because I can't get it to work. replaced with the sed
+# # command that follows.
+# augeas { "php-fpm-user":
+#   incl => $fpm_cfg,
+#   changes => [
+#     "set www/user vagrant",
+#     "set www/group vagrant",
+#   ],
+#   lens => '@PHP',
+#   require => Package['php5-fpm'],
+# }
+
+exec { "php5-fpm-user":
+  command => "sed -i.bak -e 's/^\\s*user\\s*=\\s*www-data/user = vagrant/' -e 's/^\\s*group\\s*=\\s*www-data/group = vagrant/' ${fpm_cfg}",
+  notify  => Service['php5-fpm'],
   require => Package['php5-fpm'],
 }

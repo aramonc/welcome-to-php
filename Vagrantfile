@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-i386-vagrant-disk1.box"
 
   config.vm.network :private_network, ip: "192.168.33.10"
-    config.ssh.forward_agent = true
+  config.ssh.forward_agent = true
 
   config.vm.provider :virtualbox do |v|
     v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
